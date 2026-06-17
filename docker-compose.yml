@@ -1,0 +1,38 @@
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro,z
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  backend:
+    build: ./test15b
+    container_name: backend-spring
+    ports:
+      - "8090:8080"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/test?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+  frontend:
+    build: ./frontend_test
+    container_name: frontend-html
+    ports:
+      - "8081:80"
+    depends_on:
+      - backend
