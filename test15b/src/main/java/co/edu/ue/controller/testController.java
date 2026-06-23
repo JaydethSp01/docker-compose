@@ -22,7 +22,17 @@ public class testController {
 	public String hello() {
 		return "Hola estudiantes de la 15B";
 	}
-	
+
+	@GetMapping(value="/hello2")
+	public String hello2() {
+		return "hola testing cd hello2";
+	}
+
+	@GetMapping(value="/health")
+	public String health() {
+		return "OK";
+	}
+
 	@GetMapping(value="/sumar")
     public int sumar(
             @RequestParam int numero1,

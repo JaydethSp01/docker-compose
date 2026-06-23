@@ -18,6 +18,7 @@ services:
 
   backend:
     build: ./test15b
+    image: jaydeth/backend-spring:latest
     container_name: backend-spring
     ports:
       - "8090:8080"
